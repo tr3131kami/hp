@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch作品共有ポータル</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f0f4f8; color: #333; margin: 0; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+        h1 { font-size: 1.5rem; margin: 0; color: #4c97ff; }
+        .btn { background: #4c97ff; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .btn:hover { background: #357ae8; }
+        .btn-danger { background: #ff4c4c; }
+        .btn-danger:hover { background: #e03b3b; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .project-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+        iframe { width: 100%; height: 260px; border: none; background: #eee; }
+        .hidden { display: none; }
+        input[type="text"] { padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Scratch作品共有ポータル</h1>
+        <button id="authBtn" class="btn" onclick="toggleAuth()">管理者ログイン</button>
+    </header>
+
+    <!-- 簡易ログインフォーム -->
+    <div id="loginForm" class="card hidden">
+        <h3>🔑 管理者ログイン (スクラッチオート風デモ)</h3>
+        <p>下のボタンを押すと自動で管理者モードに切り替わります。</p>
+        <button class="btn" onclick="login()">ログインする</button>
+    </div>
+
+    <!-- 管理者用 作品登録パネル -->
+    <div id="adminPanel" class="card hidden">
+        <h3>🛠️ 管理者パネル: 作品の登録</h3>
+        <div style="margin-bottom: 10px;">
+            <input type="text" id="projectId" placeholder="Scratchの作品ID (数字)">
+            <button class="btn" onclick="addProject()">作品を追加</button>
+        </div>
+        <p style="font-size: 0.85rem; color: #666; margin: 0;">
+            ※作品IDは、ScratchのプロジェクトURL（scratch.mit.edu/projects/<b>ここ</b>）の数字を入力してください。
+        </p>
+    </div>
+
+    <!-- 作品一覧 -->
+    <h2>みんなの登録作品</h2>
+    <div id="projectGrid" class="grid">
+        <!-- JSでここに作品カードが追加されます -->
+    </div>
+</div>
+
+<script>
+    let isAdmin = false;
+    // ブラウザに保存されている作品リストを読み込む
+    let projects = JSON.parse(localStorage.getItem('scratch_projects')) || [];
+
+    window.onload = function() {
+        renderProjects();
+    };
+
+    function toggleAuth() {
+        if (isAdmin) {
+            // ログアウト処理
+            isAdmin = false;
+            document.getElementById('authBtn').innerText = "管理者ログイン";
+            document.getElementById('authBtn').classList.remove('btn-danger');
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            renderProjects();
+        } else {
+            document.getElementById('loginForm').classList.toggle('hidden');
+        }
+    }
+
+    function login() {
+        isAdmin = true;
+        document.getElementById('authBtn').innerText = "ログアウト";
+        document.getElementById('authBtn').classList.add('btn-danger');
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+        renderProjects();
+    }
+
+    function addProject() {
+        const idInput = document.getElementById('projectId');
+        const id = idInput.value.trim();
+        
+        if (!id || isNaN(id)) {
+            alert('正しい作品ID（数字のみ）を入力してください。');
+            return;
+        }
+
+        if (projects.includes(id)) {
+            alert('この作品は既に登録されています。');
+            return;
+        }
+
+        projects.push(id);
+        localStorage.setItem('scratch_projects', JSON.stringify(projects));
+        idInput.value = '';
+        renderProjects();
+    }
+
+    function deleteProject(id) {
+        if (confirm('この作品を削除しますか？')) {
+            projects = projects.filter(p => p !== id);
+            localStorage.setItem('scratch_projects', JSON.stringify(projects));
+            renderProjects();
+        }
+    }
+
+    function renderProjects() {
+        const grid = document.getElementById('projectGrid');
+        grid.innerHTML = '';
+
+        if (projects.length === 0) {
+            grid.innerHTML = '<p style="color:#999;">登録されている作品がありません。管理者ログインして作品を追加してください。</p>';
+            return;
+        }
+
+        projects.forEach(id => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            
+            // Scratchの公式埋め込みプレイヤー用のHTML
+            let cardHtml = `
+                <iframe src="https://scratch.mit.edu/projects/${id}/embed" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen></iframe>
+                <p style="margin: 10px 0 0 0;">
+                    <a href="https://scratch.mit.edu/projects/${id}" target="_blank" style="color: #4c97ff; text-decoration: none; font-weight: bold;">Scratchサイトで見る ↗</a>
+                </p>
+            `;
+
+            // 管理者モードのときだけ削除ボタンを表示
+            if (isAdmin) {
+                cardHtml += `<button class="btn btn-danger" style="margin-top: 10px; padding: 4px 8px; font-size: 0.8rem;" onclick="deleteProject('${id}')">この作品を削除</button>`;
+            }
+
+            card.innerHTML = cardHtml;
+            grid.appendChild(card);
+        });
+    }
+</script>
+
+</body>
+</html>
