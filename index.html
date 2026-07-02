@@ -50,13 +50,17 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            box-sizing: border-box; /* 内側の余白を計算に含める */
         }
         .nav-container {
             max-width: 1000px;
+            width: 100%; /* 横幅いっぱいに広げる */
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap; /* スマホでボタンが溢れたら自動で改行する設定を追加 */
+            gap: 10px; /* 改行されたときの隙間を追加 */
         }
         .nav-logo {
             font-weight: 700;
@@ -68,6 +72,7 @@
             display: flex;
             gap: 20px;
             align-items: center;
+            flex-wrap: wrap; /* ボタンが多くてもはみ出さないように自動改行 */
         }
         .nav-link {
             text-decoration: none;
@@ -95,7 +100,7 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
-            white-space: nowrap; /* ボタン内の文字が勝手に改行されるのを防ぐ */
+            white-space: nowrap; /* ボタンの中の文字が変に改行されないように固定 */
         }
 
         .news-banner {
@@ -126,6 +131,7 @@
             align-items: center;
             gap: 24px;
             margin-bottom: 30px;
+            flex-wrap: wrap; /* スマホでアイコンと名前が横に並びきらない場合は縦にする */
         }
         .profile-icon {
             width: 80px;
@@ -133,7 +139,7 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--border-color);
-            flex-shrink: 0; /* スマホで画像が潰れるのを防ぐ */
+            flex-shrink: 0; /* スマホで画像が潰れて楕円形になるのを防ぐ */
         }
         .profile-titles h1 {
             margin: 0 0 4px 0;
@@ -175,7 +181,7 @@
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-            box-sizing: border-box;
+            box-sizing: border-box; /* パディングが原因で横にはみ出すのを防ぐ */
         }
         .card-title {
             font-size: 1.2rem;
@@ -260,46 +266,7 @@
             font-size: 0.85rem;
             color: var(--text-sub);
             margin-top: auto;
-        }
-
-        /* 📱 スマホ・タブレット用の横幅調整設定（追加） */
-        @media (max-width: 640px) {
-            header {
-                padding: 12px 16px;
-            }
-            .nav-container {
-                flex-direction: column; /* ロゴとメニューを縦並びに */
-                gap: 12px;
-                align-items: stretch; /* メニューの幅をいっぱいに広げる */
-            }
-            .nav-logo {
-                text-align: center;
-            }
-            .nav-menu {
-                justify-content: center;
-                flex-wrap: wrap; /* ボタンが多くなったら綺麗に折り返す */
-                gap: 8px 12px;
-            }
-            .nav-link {
-                padding: 6px 10px;
-                font-size: 0.9rem;
-            }
-            main {
-                padding: 20px 16px; /* 左右の余白を少し狭くしてコンテンツ幅を確保 */
-            }
-            .profile-header {
-                gap: 16px; /* アイコンと名前の隙間を狭く */
-            }
-            .profile-titles h1 {
-                font-size: 1.5rem; /* スマホ用に文字サイズを少し小さく */
-            }
-            .status-badge {
-                margin-left: 8px;
-                padding: 2px 8px;
-            }
-            .card {
-                padding: 16px; /* カードの内側の余白を狭く */
-            }
+            box-sizing: border-box;
         }
     </style>
 </head>
