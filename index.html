@@ -16,6 +16,8 @@
             --news-bg: #eff6ff;
             --news-text: #1d4ed8;
             --comment-bg: #f1f5f9;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.02);
+            --shadow-md: 0 10px 25px -5px rgba(79, 70, 229, 0.1), 0 8px 10px -6px rgba(79, 70, 229, 0.1);
         }
 
         [data-theme="dark"] {
@@ -29,6 +31,7 @@
             --news-bg: #1e1b4b;
             --news-text: #93c5fd;
             --comment-bg: #0f172a;
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
         }
 
         body {
@@ -40,7 +43,8 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: background-color 0.3s, color 0.3s;
+            /* 画面全体のテーマ切り替えをスムーズにするアニメーション */
+            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         header {
@@ -50,29 +54,32 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-sizing: border-box; /* 内側の余白を計算に含める */
+            box-sizing: border-box;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            transition: background-color 0.4s, border-color 0.4s;
         }
         .nav-container {
             max-width: 1000px;
-            width: 100%; /* 横幅いっぱいに広げる */
+            width: 100%;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap; /* スマホでボタンが溢れたら自動で改行する設定を追加 */
-            gap: 10px; /* 改行されたときの隙間を追加 */
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .nav-logo {
             font-weight: 700;
             font-size: 1.1rem;
             color: var(--text-main);
             text-decoration: none;
+            transition: color 0.3s;
         }
         .nav-menu {
             display: flex;
             gap: 20px;
             align-items: center;
-            flex-wrap: wrap; /* ボタンが多くてもはみ出さないように自動改行 */
+            flex-wrap: wrap;
         }
         .nav-link {
             text-decoration: none;
@@ -84,11 +91,19 @@
             border: none;
             padding: 8px 12px;
             border-radius: 6px;
+            /* ボタンホバー時・アクティブ時の滑らかなアニメーション */
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .nav-link:hover {
+            color: var(--text-main);
+            background-color: var(--comment-bg);
         }
         .nav-link.active {
             color: var(--primary);
             font-weight: 600;
             background-color: var(--news-bg);
+            transform: translateY(-1px);
         }
 
         .theme-toggle, .scratch-login-btn {
@@ -100,9 +115,26 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
-            white-space: nowrap; /* ボタンの中の文字が変に改行されないように固定 */
+            white-space: nowrap;
+            /* ホバー時の立体アニメーション */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .theme-toggle:hover, .scratch-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+        .theme-toggle:active, .scratch-login-btn:active {
+            transform: translateY(0);
         }
 
+        /* ニュースバーが上からスッと降りてくるアニメーション */
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
         .news-banner {
             max-width: 1000px;
             width: calc(100% - 48px);
@@ -115,6 +147,8 @@
             font-weight: 500;
             box-sizing: border-box;
             display: none;
+            animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            box-shadow: 0 4px 15px rgba(29, 78, 216, 0.05);
         }
 
         main {
@@ -126,12 +160,18 @@
             flex: 1;
         }
 
+        /* プロフィールエリアがふわっと現れるアニメーション */
+        @keyframes fadeInUp {
+            from { transform: translateY(15px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
         .profile-header {
             display: flex;
             align-items: center;
             gap: 24px;
             margin-bottom: 30px;
-            flex-wrap: wrap; /* スマホでアイコンと名前が横に並びきらない場合は縦にする */
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .profile-icon {
             width: 80px;
@@ -139,7 +179,12 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--border-color);
-            flex-shrink: 0; /* スマホで画像が潰れて楕円形になるのを防ぐ */
+            flex-shrink: 0;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        /* アイコンにマウスを乗せると少し拡大して回転する遊び心 */
+        .profile-icon:hover {
+            transform: scale(1.08) rotate(5deg);
         }
         .profile-titles h1 {
             margin: 0 0 4px 0;
@@ -150,12 +195,24 @@
             color: var(--text-sub);
             text-decoration: none;
             font-size: 0.95rem;
+            transition: color 0.2s, text-decoration 0.2s;
         }
         .profile-id:hover {
             color: var(--primary);
             text-decoration: underline;
         }
 
+        /* オンライン・オフラインバッジの呼吸パルスアニメーション */
+        @keyframes pulseOnline {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        @keyframes pulseOffline {
+            0% { box-shadow: 0 0 0 0 rgba(100, 116, 139, 0.2); }
+            70% { box-shadow: 0 0 0 6px rgba(100, 116, 139, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(100, 116, 139, 0); }
+        }
         .status-badge {
             display: inline-block;
             padding: 4px 10px;
@@ -164,15 +221,30 @@
             font-weight: 700;
             margin-left: 12px;
             vertical-align: middle;
+            transition: all 0.3s;
         }
-        .status-online { background-color: #ecfdf5; color: #10b981; }
-        .status-offline { background-color: #f1f5f9; color: #64748b; }
+        .status-online { 
+            background-color: #ecfdf5; 
+            color: #10b981; 
+            animation: pulseOnline 2s infinite;
+        }
+        .status-offline { 
+            background-color: #f1f5f9; 
+            color: #64748b; 
+            animation: pulseOffline 2s infinite;
+        }
 
+        /* ページ切り替え時のフェードイン効果 */
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .page-content {
             display: none;
         }
         .page-content.active {
             display: block;
+            animation: pageFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .card {
@@ -180,8 +252,13 @@
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-            box-sizing: border-box; /* パディングが原因で横にはみ出すのを防ぐ */
+            box-shadow: var(--shadow-sm);
+            box-sizing: border-box;
+            /* ダークモード切り替えやホバー時の影を滑らかにする */
+            transition: background-color 0.4s, border-color 0.4s, box-shadow 0.3s, transform 0.3s;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
         }
         .card-title {
             font-size: 1.2rem;
@@ -196,6 +273,7 @@
             background-color: #000;
             border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
         iframe {
             position: absolute;
@@ -218,6 +296,14 @@
             box-sizing: border-box;
             font-family: inherit;
             resize: vertical;
+            transition: all 0.25s ease;
+        }
+        /* 入力欄にフォーカスしたときに光るアニメーション */
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            background-color: var(--bg-card);
         }
         .comment-submit {
             align-self: flex-end;
@@ -228,18 +314,34 @@
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .comment-submit:hover { background-color: #2c974b; }
+        .comment-submit:hover { 
+            background-color: #2c974b; 
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(45, 164, 78, 0.2);
+        }
+        .comment-submit:active {
+            transform: translateY(0);
+        }
         
         .comment-list {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
+        /* 新しいコメントが追加されたときにふわっと現れる */
         .comment-item {
             border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
+            background-color: var(--bg-card);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .comment-item:hover {
+            transform: translateX(4px);
+            border-color: var(--primary);
         }
         .comment-header {
             background-color: var(--comment-bg);
@@ -249,6 +351,7 @@
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
+            transition: background-color 0.4s, border-color 0.4s;
         }
         .comment-user { font-weight: 600; color: var(--text-main); }
         .comment-body {
@@ -267,6 +370,7 @@
             color: var(--text-sub);
             margin-top: auto;
             box-sizing: border-box;
+            transition: background-color 0.4s, border-color 0.4s;
         }
     </style>
 </head>
