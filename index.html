@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>suzunokana | Official WebApp</title>
+    <!-- Firebase SDK (Realtime Database) の読み込み -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --bg-body: #f8fafc;
@@ -43,7 +47,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            /* 画面全体のテーマ切り替えをスムーズにするアニメーション */
             transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -91,7 +94,6 @@
             border: none;
             padding: 8px 12px;
             border-radius: 6px;
-            /* ボタンホバー時・アクティブ時の滑らかなアニメーション */
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
         }
@@ -116,7 +118,6 @@
             font-size: 0.85rem;
             font-weight: 600;
             white-space: nowrap;
-            /* ホバー時の立体アニメーション */
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .theme-toggle:hover, .scratch-login-btn:hover {
@@ -130,7 +131,6 @@
             transform: translateY(0);
         }
 
-        /* ニュースバーが上からスッと降りてくるアニメーション */
         @keyframes slideDown {
             from { transform: translateY(-20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -160,7 +160,6 @@
             flex: 1;
         }
 
-        /* プロフィールエリアがふわっと現れるアニメーション */
         @keyframes fadeInUp {
             from { transform: translateY(15px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -182,7 +181,6 @@
             flex-shrink: 0;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        /* アイコンにマウスを乗せると少し拡大して回転する遊び心 */
         .profile-icon:hover {
             transform: scale(1.08) rotate(5deg);
         }
@@ -202,7 +200,6 @@
             text-decoration: underline;
         }
 
-        /* オンライン・オフラインバッジの呼吸パルスアニメーション */
         @keyframes pulseOnline {
             0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
             70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
@@ -234,7 +231,6 @@
             animation: pulseOffline 2s infinite;
         }
 
-        /* ページ切り替え時のフェードイン効果 */
         @keyframes pageFadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -254,7 +250,6 @@
             padding: 24px;
             box-shadow: var(--shadow-sm);
             box-sizing: border-box;
-            /* ダークモード切り替えやホバー時の影を滑らかにする */
             transition: background-color 0.4s, border-color 0.4s, box-shadow 0.3s, transform 0.3s;
         }
         .card:hover {
@@ -298,7 +293,6 @@
             resize: vertical;
             transition: all 0.25s ease;
         }
-        /* 入力欄にフォーカスしたときに光るアニメーション */
         .comment-input:focus {
             outline: none;
             border-color: var(--primary);
@@ -330,7 +324,6 @@
             flex-direction: column;
             gap: 16px;
         }
-        /* 新しいコメントが追加されたときにふわっと現れる */
         .comment-item {
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -435,8 +428,22 @@
 
     <script>
         const SERVICE_DOMAIN = "suzunokana-scratch-hp"; 
-        const API_KEY = "6kGhbe0iVydvBuusl3S0XcmWs9YM3JmIWTFI"; // ここにdefaultのキーを入れてください
+        const API_KEY = "6kGhbe0iVydvBuusl3S0XcmWs9YM3JmIWTFI"; // microCMSのキー
         const ENDPOINT = "api"; 
+
+        // ＝★＝ Firebaseの設定情報を埋め込み済み ＝★＝
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMlH9FFcg_PtqketcbvG4sh1-w53sNqv4",
+            authDomain: "home-58834.firebaseapp.com",
+            databaseURL: "https://home-58834-default-rtdb.firebaseio.com", // 自動構築したURL
+            projectId: "home-58834",
+            storageBucket: "home-58834.firebasestorage.app",
+            messagingSenderId: "140319944663",
+            appId: "1:140319944663:web:6479ee8cf2bc45f5d06592"
+        };
+        // Firebase初期化
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         let currentScratchId = "";
         let scratchUsername = null;
@@ -455,29 +462,22 @@
             document.documentElement.setAttribute('data-theme', newTheme);
         }
 
-        // 🔗 Scratch本物の外部認証（Itinerary Auth）処理
         function handleScratchAuth() {
             if (scratchUsername) {
-                // すでにログインしている場合はログアウト処理
                 scratchUsername = null;
                 sessionStorage.removeItem("scratch_user");
                 updateLoginButton();
                 alert("ログアウトしました");
                 return;
             }
-
-            // Acodeなどのプレビュー環境でも動くよう、現在のページの絶対URLを取得
             const redirectUrl = encodeURIComponent(window.location.href);
-            // Itinerary Authの認証画面へリダイレクト
             window.location.href = `https://auth.itinerary.eu.org/auth/?redirect=${redirectUrl}&name=suzunokana-hp`;
         }
 
-        // 認証後に戻ってきた時のURLパラメータ解析機能
         function checkAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const privateCode = urlParams.get("privateCode");
 
-            // すでにセッションに保存されているか確認
             const savedUser = sessionStorage.getItem("scratch_user");
             if (savedUser) {
                 scratchUsername = savedUser;
@@ -486,9 +486,6 @@
             }
 
             if (privateCode) {
-                // 本来はサーバーサイドでトークン検証を行いますが、フロントエンドで安全にユーザー名を取り出します
-                // Itineraryは検証用APIを提供していますが、今回はItineraryの仕様に基づき戻り値から安全に判定
-                // 安全のため、ItineraryのセッションAPIに問い合わせを行います
                 fetch(`https://auth.itinerary.eu.org/api/auth/verify?privateCode=${privateCode}`)
                     .then(res => res.json())
                     .then(result => {
@@ -496,7 +493,6 @@
                             scratchUsername = result.username;
                             sessionStorage.setItem("scratch_user", scratchUsername);
                             updateLoginButton();
-                            // URLからパラメータを消して綺麗な状態にする
                             window.history.replaceState({}, document.title, window.location.pathname);
                         }
                     })
@@ -513,46 +509,49 @@
             }
         }
 
-        function loadComments() {
+        // Firebaseからコメントをリアルタイムで自動読み込み
+        function listenComments() {
             const list = document.getElementById("comment-list");
-            const saved = localStorage.getItem("gh_comments") || "[]";
-            const comments = JSON.parse(saved);
             
-            if (comments.length === 0) {
-                list.innerHTML = `<p style="text-align:center; color:var(--text-sub); font-size:0.9rem;">No comments yet.</p>`;
-                return;
-            }
+            db.ref('comments').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    list.innerHTML = `<p style="text-align:center; color:var(--text-sub); font-size:0.9rem;">No comments yet.</p>`;
+                    return;
+                }
 
-            list.innerHTML = comments.map((c, index) => `
-                <div class="comment-item">
-                    <div class="comment-header">
-                        <div><span class="comment-user">${c.user}</span> commented ${c.time}</div>
-                        <div style="color:var(--text-sub)">#${index + 1}</div>
+                const comments = Object.keys(data).map(key => data[key]);
+                
+                list.innerHTML = comments.map((c, index) => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <div><span class="comment-user">${c.user}</span> commented ${c.time}</div>
+                            <div style="color:var(--text-sub)">#${index + 1}</div>
+                        </div>
+                        <p class="comment-body">${c.text}</p>
                     </div>
-                    <p class="comment-body">${c.text}</p>
-                </div>
-            `).reverse().join('');
+                `).reverse().join('');
+            });
         }
 
+        // Firebaseにコメントを送信
         function postComment() {
             const txtArea = document.getElementById("comment-text");
             const text = txtArea.value.trim();
             if (!text) return;
 
-            const saved = localStorage.getItem("gh_comments") || "[]";
-            const comments = JSON.parse(saved);
-
             const username = scratchUsername ? `@${scratchUsername}` : "anonymous";
+            
+            const now = new Date();
+            const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-            comments.push({
+            db.ref('comments').push({
                 user: username,
                 text: text,
-                time: "just now"
+                time: timeStr
             });
 
-            localStorage.setItem("gh_comments", JSON.stringify(comments));
             txtArea.value = "";
-            loadComments();
         }
 
         async function fetchMicroCMSData() {
@@ -603,7 +602,7 @@
         // 初期化処理
         checkAuthCallback();
         fetchMicroCMSData();
-        loadComments();
+        listenComments();
 
         setInterval(fetchMicroCMSData, 30000);
     </script>
