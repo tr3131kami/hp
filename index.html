@@ -38,315 +38,140 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0; padding: 0; min-height: 100vh;
+            display: flex; flex-direction: column;
+            transition: background-color 0.4s, color 0.4s;
         }
 
-        /* 通常コンテンツのラッパー */
-        #site-wrapper {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            flex: 1;
-        }
+        #site-wrapper { display: flex; flex-direction: column; min-height: 100vh; flex: 1; }
 
         header {
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            padding: 16px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-sizing: border-box;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-            transition: background-color 0.4s, border-color 0.4s;
+            background-color: var(--bg-card); border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px; position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02); transition: background-color 0.4s;
         }
-        .nav-container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .nav-logo {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-main);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .nav-menu {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .nav-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+        .nav-menu { display: flex; gap: 20px; align-items: center; }
         .nav-link {
-            text-decoration: none;
-            color: var(--text-sub);
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            text-decoration: none; color: var(--text-sub); font-size: 0.95rem; font-weight: 500;
+            cursor: pointer; background: none; border: none; padding: 8px 12px; border-radius: 6px;
+            transition: all 0.25s;
         }
-        .nav-link:hover {
-            color: var(--text-main);
-            background-color: var(--comment-bg);
-        }
-        .nav-link.active {
-            color: var(--primary);
-            font-weight: 600;
-            background-color: var(--news-bg);
-            transform: translateY(-1px);
-        }
+        .nav-link:hover { color: var(--text-main); background-color: var(--comment-bg); }
+        .nav-link.active { color: var(--primary); font-weight: 600; background-color: var(--news-bg); }
 
         .theme-toggle, .scratch-login-btn {
-            background-color: var(--news-bg);
-            color: var(--primary);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            white-space: nowrap;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: var(--news-bg); color: var(--primary); border: 1px solid var(--border-color);
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+            transition: all 0.2s;
         }
-        .theme-toggle:hover, .scratch-login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
-            background-color: var(--primary);
-            color: #ffffff;
-            border-color: var(--primary);
-        }
+        .theme-toggle:hover, .scratch-login-btn:hover { transform: translateY(-2px); background-color: var(--primary); color: #ffffff; }
 
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
         .news-banner {
-            max-width: 1000px;
-            width: calc(100% - 48px);
-            margin: 20px auto 0 auto;
-            background-color: var(--news-bg);
-            color: var(--news-text);
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            box-sizing: border-box;
-            display: none;
-            animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            box-shadow: 0 4px 15px rgba(29, 78, 216, 0.05);
+            max-width: 1000px; width: calc(100% - 48px); margin: 20px auto 0 auto;
+            background-color: var(--news-bg); color: var(--news-text); padding: 12px 16px;
+            border-radius: 12px; font-size: 0.9rem; font-weight: 500; display: none;
         }
 
-        main {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 30px 24px;
-            box-sizing: border-box;
-            flex: 1;
-        }
+        main { max-width: 1000px; width: 100%; margin: 0 auto; padding: 30px 24px; box-sizing: border-box; flex: 1; }
 
-        @keyframes fadeInUp {
-            from { transform: translateY(15px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .profile-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border-color);
-            flex-shrink: 0;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .profile-icon:hover {
-            transform: scale(1.08) rotate(5deg);
-        }
-        .profile-titles h1 {
-            margin: 0 0 4px 0;
-            font-size: 2rem;
-            color: var(--text-main);
-        }
-        .profile-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .profile-id {
-            color: var(--text-sub);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s, text-decoration 0.2s;
-        }
-        .profile-id:hover {
-            color: var(--primary);
-            text-decoration: underline;
-        }
-        .follower-count {
-            background-color: var(--comment-bg);
-            color: var(--text-sub);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
+        .profile-header { display: flex; align-items: center; gap: 24px; margin-bottom: 30px; flex-wrap: wrap; }
+        .profile-icon { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
+        .profile-titles h1 { margin: 0 0 4px 0; font-size: 2rem; color: var(--text-main); }
+        .profile-meta { display: flex; align-items: center; gap: 12px; }
+        .profile-id { color: var(--text-sub); text-decoration: none; font-size: 0.95rem; }
+        .follower-count { background-color: var(--comment-bg); color: var(--text-sub); padding: 2px 8px; border-radius: 6px; font-size: 0.85rem; }
 
-        .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-left: 12px;
-            vertical-align: middle;
-        }
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-left: 12px; }
         .status-online { background-color: #ecfdf5; color: #10b981; }
         .status-offline { background-color: #f1f5f9; color: #64748b; }
 
         .page-content { display: none; }
-        .page-content.active {
-            display: block;
-            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+        .page-content.active { display: block; }
 
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-            box-sizing: border-box;
-            transition: background-color 0.4s, border-color 0.4s, box-shadow 0.3s;
-        }
-        .card:hover { box-shadow: var(--shadow-md); }
+        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; }
         .card-title { font-size: 1.2rem; margin-top: 0; margin-bottom: 16px; }
 
-        .iframe-container {
-            position: relative; width: 100%; padding-top: 56.25%; background-color: #000; border-radius: 12px; overflow: hidden;
-        }
+        .iframe-container { position: relative; width: 100%; padding-top: 56.25%; background-color: #000; border-radius: 12px; overflow: hidden; }
         iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        footer {
-            background-color: var(--bg-card); border-top: 1px solid var(--border-color); padding: 20px; text-align: center; font-size: 0.85rem; color: var(--text-sub); margin-top: auto; box-sizing: border-box; transition: background-color 0.4s, border-color 0.4s;
-        }
+        footer { background-color: var(--bg-card); border-top: 1px solid var(--border-color); padding: 20px; text-align: center; font-size: 0.85rem; color: var(--text-sub); margin-top: auto; }
 
-        /* 👑 洗練されたアップデート中（メンテナンス）画面のUI */
+        /* 👑 洗練されたアップデート画面 ＆ 緊急通知フォーム */
         #update-screen {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: var(--bg-body);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            box-sizing: border-box;
-            transition: background-color 0.4s;
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--bg-body); z-index: 10000; align-items: center; justify-content: center;
+            padding: 24px; box-sizing: border-box; overflow-y: auto; transition: background-color 0.4s;
         }
         .update-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 40px 32px;
-            max-width: 480px;
-            width: 100%;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-            transition: background-color 0.4s, border-color 0.4s;
+            background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px;
+            padding: 35px 28px; max-width: 480px; width: 100%; text-align: center; box-shadow: var(--shadow-md);
+            position: relative; overflow: hidden; transition: background-color 0.4s, border-color 0.4s;
         }
-        /* 上部に走るグラデーションの装飾バー */
         .update-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 6px;
-            background: linear-gradient(90deg, #4f46e5, #818cf8, #4f46e5);
-            background-size: 200% auto;
-            animation: shimmer 3s linear infinite;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+            background: linear-gradient(90deg, #4f46e5, #818cf8, #4f46e5); background-size: 200% auto; animation: shimmer 3s linear infinite;
         }
-        @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
+        @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        
+        .gear-icon-wrapper { width: 64px; height: 64px; background-color: var(--news-bg); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.8rem; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        
+        .update-title { font-size: 1.4rem; font-weight: 700; margin: 0 0 10px 0; }
+        .update-text { font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; margin: 0 0 20px 0; }
+        .update-notice-box { background-color: var(--comment-bg); border-radius: 12px; padding: 12px 14px; font-size: 0.85rem; text-align: left; border-left: 4px solid var(--primary); margin-bottom: 24px; }
+
+        /* 緊急不具合報告フォームのUI */
+        .emergency-form {
+            border-top: 1px dashed var(--border-color); padding-top: 20px; text-align: left;
         }
-        /* ふわふわ動く近未来的なローディングアニメーション */
-        .gear-icon-wrapper {
-            width: 72px; height: 72px;
-            background-color: var(--news-bg);
-            border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 24px auto;
-            font-size: 2rem;
-            animation: float 3s ease-in-out infinite;
+        .form-label { font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px; }
+        .emergency-input, .emergency-textarea {
+            width: 100%; background-color: var(--comment-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; color: var(--text-main);
+            box-sizing: border-box; margin-bottom: 12px; font-family: inherit; transition: border-color 0.2s;
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(10deg); }
+        .emergency-input:focus, .emergency-textarea:focus { outline: none; border-color: var(--primary); }
+        .emergency-textarea { height: 70px; resize: none; }
+        
+        .emergency-btn {
+            width: 100%; background-color: #ef4444; color: #ffffff; border: none; padding: 11px;
+            border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
-        .update-title {
-            font-size: 1.5rem; font-weight: 700; margin: 0 0 12px 0; color: var(--text-main);
-        }
-        .update-text {
-            font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; margin: 0 0 24px 0;
-        }
-        .update-notice-box {
-            background-color: var(--comment-bg);
-            border-radius: 12px;
-            padding: 14px 16px;
-            font-size: 0.85rem;
-            color: var(--text-main);
-            font-weight: 500;
-            text-align: left;
-            border-left: 4px solid var(--primary);
-        }
-        .update-mini-footer {
-            margin-top: 32px; font-size: 0.8rem; color: var(--text-sub);
-        }
+        .emergency-btn:hover { background-color: #dc2626; transform: translateY(-1px); }
+        .emergency-btn:disabled { background-color: var(--border-color); color: var(--text-sub); cursor: not-allowed; transform: none; }
     </style>
 </head>
 <body>
 
-    <!-- 🛠️ アップデート中画面（初期状態は非表示） -->
+    <!-- 🛠️ アップデート中画面（緊急通知フォーム内蔵） -->
     <div id="update-screen">
         <div class="update-card">
             <div class="gear-icon-wrapper">✨</div>
             <h2 class="update-title">SYSTEM UPDATE</h2>
-            <p class="update-text">ただいまウェブアプリのアップデートおよびメンテナンスを行っています。完了までしばらくお待ちください。</p>
+            <p class="update-text">ただいまアプリのメンテナンスを行っています。</p>
             <div id="update-reason" class="update-notice-box">最新のデータを同期しています...</div>
-            <div class="update-mini-footer">© suzunokana | Official WebApp</div>
+            
+            <!-- 🚨 緊急不具合報告フォーム -->
+            <div class="emergency-form">
+                <label class="form-label">👤 お名前（Scratch名など）</label>
+                <input type="text" id="emergency-name" class="emergency-input" placeholder="匿名でもOK">
+                
+                <label class="form-label">⚠️ 不具合・バグの内容</label>
+                <textarea id="emergency-msg" class="emergency-textarea" placeholder="例：〇〇のボタンが押せません、画面が真っ白です など"></textarea>
+                
+                <button id="emergency-submit" class="emergency-btn" onclick="sendEmergencyNotification()">
+                    <span>🚀 開発者に緊急送信 (Discord通知)</span>
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- 🌐 通常サイトのコンテンツ -->
     <div id="site-wrapper">
+        <!-- 省略なし（通常コンテンツが入ります） -->
         <header>
             <div class="nav-container">
                 <a href="#" class="nav-logo">suzunokana</a>
@@ -395,8 +220,11 @@
 
     <script>
         const SERVICE_DOMAIN = "suzunokana-scratch-hp"; 
-        const API_KEY = "6kGhbe0iVydvBuusl3S0XcmWs9YM3JmIWTFI"; // ここにあなたのmicroCMSのAPIキーを入れてください
+        const API_KEY = "6kGhbe0iVydvBuusl3S0XcmWs9YM3JmIWTFI"; // microCMSのAPIキー
         const ENDPOINT = "api"; 
+
+        // 🔗 コピーしたDiscordのWebhook URLをここに貼り付けてください！
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1522167677878276145/fePGClXiWVOhvn5uBVsLhKH2deXbcNVY8Xj0u7SAqEjXBf3fdyncGbOXSUzsC-SpfjWz";
 
         let currentScratchId = "";
         let scratchUsername = null;
@@ -451,6 +279,64 @@
             btn.innerText = scratchUsername ? `@${scratchUsername}` : "Scratch接続";
         }
 
+        // 🚨 Discordへ緊急バグ報告を通知する関数
+        async function sendEmergencyNotification() {
+            const nameInput = document.getElementById("emergency-name").value.trim() || "匿名希望";
+            const msgInput = document.getElementById("emergency-msg").value.trim();
+            const btn = document.getElementById("emergency-submit");
+
+            if (!msgInput) {
+                alert("不具合の内容を入力してください！");
+                return;
+            }
+
+            if (DISCORD_WEBHOOK_URL.includes("ここにDiscord")) {
+                alert("DiscordのWebhook設定が完了していません。コード内のURLを書き換えてください。");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "送信中...";
+
+            // Discordにきれいに表示するためのデータ
+            const payload = {
+                username: "アップデート不具合監視ボット",
+                avatar_url: "https://cdn.discordapp.com/embed/avatars/0.png",
+                embeds: [{
+                    title: "🚨 メンテナンス中のサイトから緊急バグ報告！",
+                    color: 15548997, // 赤色
+                    fields: [
+                        { name: "👤 報告者", value: nameInput, inline: true },
+                        { name: "🔗 発生場所", value: window.location.href, inline: true },
+                        { name: "💬 報告内容", value: msgInput }
+                    ],
+                    footer: { text: "suzunokana WebApp 監視システム" },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert("開発者(Discord)へ不具合を報告しました。ご協力ありがとうございます！");
+                    document.getElementById("emergency-msg").value = "";
+                } else {
+                    alert("送信に失敗しました。時間をおいて再度お試しください。");
+                }
+            } catch (error) {
+                console.error("Discord通知エラー:", error);
+                alert("通信エラーが発生しました。");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "🚀 開発者に緊急送信 (Discord通知)";
+            }
+        }
+
         async function fetchMicroCMSData() {
             try {
                 const response = await fetch(`https://${SERVICE_DOMAIN}.microcms.io/api/v1/${ENDPOINT}?nocache=${new Date().getTime()}`, {
@@ -458,23 +344,20 @@
                 });
                 const data = await response.json();
 
-                // 🚨 アップデート中（メンテナンス）の判定
                 if (data.is_updating === true) {
                     document.getElementById("site-wrapper").style.display = "none";
                     document.getElementById("update-screen").style.display = "flex";
-                    // もし告知テキストがあれば、アップデート理由として表示
                     if (data.news_text) {
                         document.getElementById("update-reason").innerText = `📢 お知らせ: ${data.news_text}`;
                     } else {
                         document.getElementById("update-reason").innerText = `⚙️ 現在、新機能の追加や調整を行っています。`;
                     }
-                    return; // アップデート中はこれ以降の処理をストップ
+                    return;
                 } else {
                     document.getElementById("site-wrapper").style.display = "flex";
                     document.getElementById("update-screen").style.display = "none";
                 }
 
-                // 通常のデータ反映処理
                 const iconImg = document.getElementById("user-icon");
                 if (data.icon_image?.url && iconImg.src !== data.icon_image.url) {
                     iconImg.src = data.icon_image.url;
@@ -519,7 +402,7 @@
 
         checkAuthCallback();
         fetchMicroCMSData();
-        setInterval(fetchMicroCMSData, 15000); // アップデートの検知を早くするため15秒ごとに確認
+        setInterval(fetchMicroCMSData, 15000);
     </script>
 </body>
 </html>
