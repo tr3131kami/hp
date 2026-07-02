@@ -2,11 +2,11 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <!-- 👇 スマホで横幅を自動調整するために絶対に 1番 必要な設定です -->
+    <!-- 👇 スマホで横幅を自動調整するための設定（追加しました） -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scratch Project Portal</title>
     <style>
-        /* 全体の設定 */
+        /* 全体の基本設定 */
         body {
             margin: 0;
             padding: 20px;
@@ -15,18 +15,16 @@
             box-sizing: border-box;
         }
 
-        /* 👇 コンテナ（枠）の設定をスマホ対応に修正しました */
+        /* 👇 メインの枠組み（スマホで横にはみ出さないように修正） */
         #container {
-            /* width: 800px; のような固定値ではなく、最大幅を指定します */
-            max-width: 800px; 
-            width: 100%; /* 画面が狭いときは画面幅いっぱいに広がります */
+            max-width: 800px; /* パソコンでは最大800pxの幅 */
+            width: 100%;      /* スマホでは画面幅いっぱいに縮む */
             margin: 0 auto;
             background-color: #ffffff;
             border: 1px solid #ccc;
             border-radius: 8px;
             padding: 20px;
-            /* パディングが横幅からはみ出さないようにする設定 */
-            box-sizing: border-box; 
+            box-sizing: border-box; /* 余白が外にはみ出さないようにする */
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
@@ -35,30 +33,60 @@
             margin-bottom: 20px;
         }
 
-        /* サインインボタンのデザイン（必要に応じて使ってください） */
-        .btn-signin {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
+        /* プロフィールエリアのスタイル */
+        .profile-section {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* リストのスタイル（スマホでも見やすく） */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
             border-radius: 4px;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div id="#container">
+    <div id="container">
         <header>
             <h1>Scratch Project Portal</h1>
-            <p>スマホでもはみ出さずに表示されるようになりました！</p>
         </header>
 
-        <!-- もしボタンを置くならこのようなイメージです -->
-        <!-- <div style="text-align: center;">
-            <a href="#" class="btn-signin">Scratchでサインイン</a>
-        </div> -->
+        <!-- 👇 ユーザー情報・プロフィール表示エリア -->
+        <div class="profile-section">
+            <h2>プロフィール</h2>
+            <div id="user-profile">
+                <!-- ここにScratch Auth等から取得したプロフィール（ユーザー名やアイコンなど）が表示されます -->
+                <p>ロード中...</p> 
+            </div>
+        </div>
+
+        <!-- 👇 リポジトリにあったファイル・フォルダへのリンク -->
+        <div class="links-section">
+            <h2>コンテンツ</h2>
+            <ul>
+                <li>📁 <a href="home/">home</a></li>
+                <!-- 必要なページへのリンクをここに追加できます -->
+            </ul>
+        </div>
     </div>
 
 </body>
