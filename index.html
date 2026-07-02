@@ -214,16 +214,6 @@
             transition: all 0.3s ease;
         }
 
-        @keyframes pulseOnline {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-        @keyframes pulseOffline {
-            0% { box-shadow: 0 0 0 0 rgba(100, 116, 139, 0.2); }
-            70% { box-shadow: 0 0 0 6px rgba(100, 116, 139, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(100, 116, 139, 0); }
-        }
         .status-badge {
             display: inline-block;
             padding: 4px 10px;
@@ -237,18 +227,12 @@
         .status-online { 
             background-color: #ecfdf5; 
             color: #10b981; 
-            animation: pulseOnline 2s infinite;
         }
         .status-offline { 
             background-color: #f1f5f9; 
             color: #64748b; 
-            animation: pulseOffline 2s infinite;
         }
 
-        @keyframes pageFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
         .page-content {
             display: none;
         }
@@ -419,39 +403,6 @@
             }
         }
 
-        // Scratchのフォロワー数をリアルタイム取得する関数
-        async function fetchScratchFollowers() {
-            try {
-                // Scratch公式APIのCORSを回避できるオープンAPIを使用
-                const response = await fetch('https://api.scratch.mit.edu/users/suzunokana/followers');
-                
-                // 上記がエラーを起こす場合の予備（ScratchDB API）
-                // const response = await fetch('https://scratchdb.lefty.one/v3/user/info/suzunokana');
-                
-                if (response.ok) {
-                    // 通常の公式APIは配列でフォロワーを返すため、X-Total-Countヘッダーやデータ件数を見るか、
-                    // もしくは確実なScratchDB等から取得します。今回は一番軽快なAPIで件数を反映します。
-                    const res = await fetch('https://scratchdb.lefty.one/v3/user/info/suzunokana');
-                    const data = await res.json();
-                    if (data && data.statistics && data.statistics.followers !== undefined) {
-                        document.getElementById("follower-count").innerText = `👥 ${data.statistics.followers.toLocaleString()} followers`;
-                    }
-                }
-            } catch (error) {
-                console.error("Scratchフォロワーの取得に失敗:", error);
-                // 予備のAPIルート
-                try {
-                    const res = await fetch('https://nanorail.elgatito.cc/users/suzunokana');
-                    const data = await res.json();
-                    if(data && data.followers) {
-                        document.getElementById("follower-count").innerText = `👥 ${data.followers.toLocaleString()} followers`;
-                    }
-                } catch(e) {
-                    document.getElementById("follower-count").innerText = `👥 エラー followers`;
-                }
-            }
-        }
-
         async function fetchMicroCMSData() {
             try {
                 const response = await fetch(`https://${SERVICE_DOMAIN}.microcms.io/api/v1/${ENDPOINT}?nocache=${new Date().getTime()}`, {
@@ -465,6 +416,13 @@
                 }
 
                 document.getElementById("bio").innerText = data.profile_text || "自己紹介が未入力です。";
+
+                // フォロワー数の反映（microCMSから取得）
+                if (data.followers_count !== undefined && data.followers_count !== null) {
+                    document.getElementById("follower-count").innerText = `👥 ${Number(data.followers_count).toLocaleString()} followers`;
+                } else {
+                    document.getElementById("follower-count").innerText = `👥 0 followers`;
+                }
 
                 const badge = document.getElementById("status-badge");
                 if (data.is_active === true) {
@@ -500,11 +458,9 @@
         // 初期化処理
         checkAuthCallback();
         fetchMicroCMSData();
-        fetchScratchFollowers(); // フォロワー数を取得
 
         // 定期アップデート (30秒ごと)
         setInterval(fetchMicroCMSData, 30000);
-        setInterval(fetchScratchFollowers, 60000); // フォロワー数は1分ごとに更新
     </script>
 </body>
 </html>
