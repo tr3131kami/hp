@@ -46,6 +46,14 @@
             transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* 通常コンテンツのラッパー */
+        #site-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            flex: 1;
+        }
+
         header {
             background-color: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
@@ -122,9 +130,6 @@
             background-color: var(--primary);
             color: #ffffff;
             border-color: var(--primary);
-        }
-        .theme-toggle:active, .scratch-login-btn:active {
-            transform: translateY(0);
         }
 
         @keyframes slideDown {
@@ -211,7 +216,6 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            transition: all 0.3s ease;
         }
 
         .status-badge {
@@ -222,23 +226,14 @@
             font-weight: 700;
             margin-left: 12px;
             vertical-align: middle;
-            transition: all 0.3s;
         }
-        .status-online { 
-            background-color: #ecfdf5; 
-            color: #10b981; 
-        }
-        .status-offline { 
-            background-color: #f1f5f9; 
-            color: #64748b; 
-        }
+        .status-online { background-color: #ecfdf5; color: #10b981; }
+        .status-offline { background-color: #f1f5f9; color: #64748b; }
 
-        .page-content {
-            display: none;
-        }
+        .page-content { display: none; }
         .page-content.active {
             display: block;
-            animation: pageFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .card {
@@ -248,91 +243,155 @@
             padding: 24px;
             box-shadow: var(--shadow-sm);
             box-sizing: border-box;
-            transition: background-color 0.4s, border-color 0.4s, box-shadow 0.3s, transform 0.3s;
+            transition: background-color 0.4s, border-color 0.4s, box-shadow 0.3s;
         }
-        .card:hover {
-            box-shadow: var(--shadow-md);
-        }
-        .card-title {
-            font-size: 1.2rem;
-            margin-top: 0;
-            margin-bottom: 16px;
-        }
+        .card:hover { box-shadow: var(--shadow-md); }
+        .card-title { font-size: 1.2rem; margin-top: 0; margin-bottom: 16px; }
 
         .iframe-container {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%;
-            background-color: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            position: relative; width: 100%; padding-top: 56.25%; background-color: #000; border-radius: 12px; overflow: hidden;
         }
-        iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%; border: none;
-        }
+        iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
         footer {
-            background-color: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            padding: 20px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-sub);
-            margin-top: auto;
+            background-color: var(--bg-card); border-top: 1px solid var(--border-color); padding: 20px; text-align: center; font-size: 0.85rem; color: var(--text-sub); margin-top: auto; box-sizing: border-box; transition: background-color 0.4s, border-color 0.4s;
+        }
+
+        /* 👑 洗練されたアップデート中（メンテナンス）画面のUI */
+        #update-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--bg-body);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
             box-sizing: border-box;
+            transition: background-color 0.4s;
+        }
+        .update-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px 32px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
             transition: background-color 0.4s, border-color 0.4s;
+        }
+        /* 上部に走るグラデーションの装飾バー */
+        .update-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 6px;
+            background: linear-gradient(90deg, #4f46e5, #818cf8, #4f46e5);
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        /* ふわふわ動く近未来的なローディングアニメーション */
+        .gear-icon-wrapper {
+            width: 72px; height: 72px;
+            background-color: var(--news-bg);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px auto;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(10deg); }
+        }
+        .update-title {
+            font-size: 1.5rem; font-weight: 700; margin: 0 0 12px 0; color: var(--text-main);
+        }
+        .update-text {
+            font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; margin: 0 0 24px 0;
+        }
+        .update-notice-box {
+            background-color: var(--comment-bg);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            font-weight: 500;
+            text-align: left;
+            border-left: 4px solid var(--primary);
+        }
+        .update-mini-footer {
+            margin-top: 32px; font-size: 0.8rem; color: var(--text-sub);
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <a href="#" class="nav-logo">suzunokana</a>
-            <div class="nav-menu">
-                <button class="nav-link active" onclick="switchPage('home')">Home</button>
-                <button class="nav-link" onclick="switchPage('project')">Project</button>
-                
-                <button id="scratch-login-btn" class="scratch-login-btn" onclick="handleScratchAuth()">Scratch接続</button>
-                <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
-            </div>
+    <!-- 🛠️ アップデート中画面（初期状態は非表示） -->
+    <div id="update-screen">
+        <div class="update-card">
+            <div class="gear-icon-wrapper">✨</div>
+            <h2 class="update-title">SYSTEM UPDATE</h2>
+            <p class="update-text">ただいまウェブアプリのアップデートおよびメンテナンスを行っています。完了までしばらくお待ちください。</p>
+            <div id="update-reason" class="update-notice-box">最新のデータを同期しています...</div>
+            <div class="update-mini-footer">© suzunokana | Official WebApp</div>
         </div>
-    </header>
+    </div>
 
-    <div id="news-banner" class="news-banner">Loading latest news...</div>
-
-    <main>
-        <div class="profile-header">
-            <img id="user-icon" class="profile-icon" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Icon">
-            <div class="profile-titles">
-                <h1>suzunokana<span id="status-badge" class="status-badge status-offline">OFFLINE</span></h1>
-                <div class="profile-meta">
-                    <a class="profile-id" href="https://scratch.mit.edu/users/suzunokana" target="_blank">@suzunokana</a>
-                    <span id="follower-count" class="follower-count">👥 -- followers</span>
+    <!-- 🌐 通常サイトのコンテンツ -->
+    <div id="site-wrapper">
+        <header>
+            <div class="nav-container">
+                <a href="#" class="nav-logo">suzunokana</a>
+                <div class="nav-menu">
+                    <button class="nav-link active" onclick="switchPage('home')">Home</button>
+                    <button class="nav-link" onclick="switchPage('project')">Project</button>
+                    <button id="scratch-login-btn" class="scratch-login-btn" onclick="handleScratchAuth()">Scratch接続</button>
+                    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <div id="page-home" class="page-content active">
-            <div class="card">
-                <h2 class="card-title">Biography</h2>
-                <p id="bio">Loading biography...</p>
+        <div id="news-banner" class="news-banner">Loading latest news...</div>
+
+        <main>
+            <div class="profile-header">
+                <img id="user-icon" class="profile-icon" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Icon">
+                <div class="profile-titles">
+                    <h1>suzunokana<span id="status-badge" class="status-badge status-offline">OFFLINE</span></h1>
+                    <div class="profile-meta">
+                        <a class="profile-id" href="https://scratch.mit.edu/users/suzunokana" target="_blank">@suzunokana</a>
+                        <span id="follower-count" class="follower-count">👥 -- followers</span>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div id="page-project" class="page-content">
-            <div class="card">
-                <h2 class="card-title">Featured Project</h2>
-                <div id="project-wrapper" class="iframe-container"></div>
+            <div id="page-home" class="page-content active">
+                <div class="card">
+                    <h2 class="card-title">Biography</h2>
+                    <p id="bio">Loading biography...</p>
+                </div>
             </div>
-        </div>
-    </main>
 
-    <footer>
-        &copy; 2026 suzunokana | Multi-functional WebApp
-    </footer>
+            <div id="page-project" class="page-content">
+                <div class="card">
+                    <h2 class="card-title">Featured Project</h2>
+                    <div id="project-wrapper" class="iframe-container"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            &copy; 2026 suzunokana | Multi-functional WebApp
+        </footer>
+    </div>
 
     <script>
         const SERVICE_DOMAIN = "suzunokana-scratch-hp"; 
@@ -345,7 +404,6 @@
         function switchPage(pageName) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            
             document.getElementById(`page-${pageName}`).classList.add('active');
             event.target.classList.add('active');
         }
@@ -371,13 +429,8 @@
         function checkAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const privateCode = urlParams.get("privateCode");
-
             const savedUser = sessionStorage.getItem("scratch_user");
-            if (savedUser) {
-                scratchUsername = savedUser;
-                updateLoginButton();
-                return;
-            }
+            if (savedUser) { scratchUsername = savedUser; updateLoginButton(); return; }
 
             if (privateCode) {
                 fetch(`https://auth.itinerary.eu.org/api/auth/verify?privateCode=${privateCode}`)
@@ -389,18 +442,13 @@
                             updateLoginButton();
                             window.history.replaceState({}, document.title, window.location.pathname);
                         }
-                    })
-                    .catch(err => console.error("Authentication failed:", err));
+                    });
             }
         }
 
         function updateLoginButton() {
             const btn = document.getElementById("scratch-login-btn");
-            if (scratchUsername) {
-                btn.innerText = `@${scratchUsername}`;
-            } else {
-                btn.innerText = "Scratch接続";
-            }
+            btn.innerText = scratchUsername ? `@${scratchUsername}` : "Scratch接続";
         }
 
         async function fetchMicroCMSData() {
@@ -410,6 +458,23 @@
                 });
                 const data = await response.json();
 
+                // 🚨 アップデート中（メンテナンス）の判定
+                if (data.is_updating === true) {
+                    document.getElementById("site-wrapper").style.display = "none";
+                    document.getElementById("update-screen").style.display = "flex";
+                    // もし告知テキストがあれば、アップデート理由として表示
+                    if (data.news_text) {
+                        document.getElementById("update-reason").innerText = `📢 お知らせ: ${data.news_text}`;
+                    } else {
+                        document.getElementById("update-reason").innerText = `⚙️ 現在、新機能の追加や調整を行っています。`;
+                    }
+                    return; // アップデート中はこれ以降の処理をストップ
+                } else {
+                    document.getElementById("site-wrapper").style.display = "flex";
+                    document.getElementById("update-screen").style.display = "none";
+                }
+
+                // 通常のデータ反映処理
                 const iconImg = document.getElementById("user-icon");
                 if (data.icon_image?.url && iconImg.src !== data.icon_image.url) {
                     iconImg.src = data.icon_image.url;
@@ -417,11 +482,8 @@
 
                 document.getElementById("bio").innerText = data.profile_text || "自己紹介が未入力です。";
 
-                // フォロワー数の反映（microCMSから取得）
                 if (data.followers_count !== undefined && data.followers_count !== null) {
                     document.getElementById("follower-count").innerText = `👥 ${Number(data.followers_count).toLocaleString()} followers`;
-                } else {
-                    document.getElementById("follower-count").innerText = `👥 0 followers`;
                 }
 
                 const badge = document.getElementById("status-badge");
@@ -455,12 +517,9 @@
             }
         }
 
-        // 初期化処理
         checkAuthCallback();
         fetchMicroCMSData();
-
-        // 定期アップデート (30秒ごと)
-        setInterval(fetchMicroCMSData, 30000);
+        setInterval(fetchMicroCMSData, 15000); // アップデートの検知を早くするため15秒ごとに確認
     </script>
 </body>
 </html>
