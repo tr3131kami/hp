@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>suzunokana | Official WebApp</title>
-    <!-- 🧩 reCAPTCHA v3の読み込み（「あなたのサイトキー」に置き換えてください） -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6Lc8UUctAAAAAKn83XrCcLcW0fHvPYq0zo2hjXrg"></script>
+    <!-- 🧩 reCAPTCHA v3の読み込み -->
+    <script src="https://www.google.com/recaptcha/api.js?render=あなたのサイトキー"></script>
     <style>
         :root {
             --bg-body: #f8fafc;
@@ -161,6 +161,9 @@
                 <label class="form-label">👤 お名前（Scratch名など）</label>
                 <input type="text" id="emergency-name-m" class="emergency-input" placeholder="匿名でもOK">
                 
+                <label class="form-label">✉️ 返信用メールアドレス（任意）</label>
+                <input type="email" id="emergency-email-m" class="emergency-input" placeholder="example@gmail.com">
+
                 <label class="form-label">⚠️ 不具合・バグの内容</label>
                 <textarea id="emergency-msg-m" class="emergency-textarea" placeholder="例：〇〇のボタンが押せません、画面が真っ白です など"></textarea>
                 
@@ -222,6 +225,9 @@
                     <label class="form-label">👤 お名前（Scratch名など）</label>
                     <input type="text" id="emergency-name" class="emergency-input" placeholder="匿名でもOK">
                     
+                    <label class="form-label">✉️ 返信用メールアドレス（任意）</label>
+                    <input type="email" id="emergency-email" class="emergency-input" placeholder="example@gmail.com">
+
                     <label class="form-label">📝 メッセージまたは不具合内容</label>
                     <textarea id="emergency-msg" class="emergency-textarea" placeholder="お気軽にメッセージをどうぞ！"></textarea>
                     
@@ -299,10 +305,10 @@
         }
 
         // 🚨 Discordへ通知を送信する関数（reCAPTCHA v3対応）
-        // mode: 'm' = メンテナンス中画面のフォーム / 'n' = 通常画面のフォーム
         async function sendEmergencyNotification(mode = 'n') {
             const suffix = mode === 'm' ? "-m" : "";
             const nameInput = document.getElementById(`emergency-name${suffix}`).value.trim() || "匿名希望";
+            const emailInput = document.getElementById(`emergency-email${suffix}`).value.trim() || "未入力";
             const msgInput = document.getElementById(`emergency-msg${suffix}`).value.trim();
             const btn = document.getElementById(`emergency-submit${suffix}`);
 
@@ -329,11 +335,12 @@
                         avatar_url: "https://cdn.discordapp.com/embed/avatars/0.png",
                         embeds: [{
                             title: mode === 'm' ? "🚨 メンテナンス中のサイトから緊急報告！" : "💬 通常稼働サイトからメッセージ受信！",
-                            color: mode === 'm' ? 15548997 : 3447003, // メンテナンス中は赤、通常時は青
+                            color: mode === 'm' ? 15548997 : 3447003,
                             fields: [
                                 { name: "👤 報告者", value: nameInput, inline: true },
-                                { name: "🔗 発生場所", value: window.location.href, inline: true },
-                                { name: "💬 内容", value: msgInput }
+                                { name: "✉️ 返信用メアド", value: emailInput, inline: true },
+                                { name: "🔗 発生場所", value: window.location.href, inline: false },
+                                { name: "💬 内容", value: msgInput, inline: false }
                             ],
                             footer: { text: "suzunokana WebApp 監視システム" },
                             timestamp: new Date().toISOString()
@@ -350,6 +357,7 @@
                         if (response.ok) {
                             alert("送信が完了しました！ご協力ありがとうございました。");
                             document.getElementById(`emergency-msg${suffix}`).value = "";
+                            document.getElementById(`emergency-email${suffix}`).value = "";
                         } else {
                             alert("送信に失敗しました。時間をおいて再度お試しください。");
                         }
@@ -377,7 +385,7 @@
                     if (data.news_text) {
                         document.getElementById("update-reason").innerText = `📢 お知らせ: ${data.news_text}`;
                     } else {
-                        document.getElementById("update-reason").innerText = `⚙️ 現在、新機能 of 追加や調整を行っています。`;
+                        document.getElementById("update-reason").innerText = `⚙️ 現在、新機能の追加や調整を行っています。`;
                     }
                     return;
                 } else {
